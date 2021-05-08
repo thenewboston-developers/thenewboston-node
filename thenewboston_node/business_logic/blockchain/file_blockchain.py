@@ -26,6 +26,11 @@ BLOCK_CHUNK_FILENAME_RE = re.compile(
     BLOCK_CHUNK_FILENAME_TEMPLATE.format(start=r'(?P<start>\d+)', end=r'(?P<end>\d+)')
 )
 
+DEFAULT_ACCOUNT_ROOT_FILE_SUBDIR = 'account-root-files'
+DEFAULT_BLOCKS_SUBDIR = 'blocks'
+
+DEFAULT_BLOCK_CHUNK_SIZE = 100
+
 
 def get_start_end(file_path):
     filename = os.path.basename(file_path)
@@ -39,6 +44,14 @@ def get_start_end(file_path):
     return None, None
 
 
+def get_block_chunk_filename(start: int, end: int):
+    start_block_str = str(start).zfill(ORDER_OF_BLOCK)
+    end_block_str = str(end).zfill(ORDER_OF_BLOCK)
+
+    block_chunk_filename = BLOCK_CHUNK_FILENAME_TEMPLATE.format(start=start_block_str, end=end_block_str)
+    return block_chunk_filename
+
+
 class FileBlockchain(BlockchainBase):
 
     def __init__(
@@ -47,13 +60,13 @@ class FileBlockchain(BlockchainBase):
         base_directory,
 
         # Account root files
-        account_root_files_subdir='account-root-files',
+        account_root_files_subdir=DEFAULT_ACCOUNT_ROOT_FILE_SUBDIR,
         account_root_files_cache_size=128,
         account_root_files_storage_kwargs=None,
 
         # Blocks
-        blocks_subdir='blocks',
-        block_chunk_size=100,
+        blocks_subdir=DEFAULT_BLOCKS_SUBDIR,
+        block_chunk_size=DEFAULT_BLOCK_CHUNK_SIZE,
         blocks_cache_size=None,
         blocks_storage_kwargs=None,
         **kwargs
@@ -127,17 +140,15 @@ class FileBlockchain(BlockchainBase):
         chunk_number, offset = divmod(block_number, block_chunk_size)
 
         chunk_block_number_start = chunk_number * block_chunk_size
-        start_str = str(chunk_block_number_start).zfill(ORDER_OF_BLOCK)
-        end_str = str(block_number).zfill(ORDER_OF_BLOCK)
 
         if chunk_block_number_start == block_number:
-            append_end_str = str(block_number).zfill(ORDER_OF_BLOCK)
+            append_end = block_number
         else:
             assert chunk_block_number_start < block_number
-            append_end_str = str(block_number - 1).zfill(ORDER_OF_BLOCK)
+            append_end = block_number - 1
 
-        append_filename = BLOCK_CHUNK_FILENAME_TEMPLATE.format(start=start_str, end=append_end_str)
-        filename = BLOCK_CHUNK_FILENAME_TEMPLATE.format(start=start_str, end=end_str)
+        append_filename = get_block_chunk_filename(start=chunk_block_number_start, end=append_end)
+        filename = get_block_chunk_filename(start=chunk_block_number_start, end=block_number)
 
         storage.append(append_filename, block.to_messagepack())
 

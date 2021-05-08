@@ -50,3 +50,22 @@ lint:
 
 .PHONY: lint-and-test
 lint-and-test: lint test ;
+
+#.PHONY: docs
+#docs:
+#	./docs/source/make_doc_data.py | j2 -f json ./docs/source/index.rst > ./docs/build/index.rst
+
+#docs-build-data:
+#	./docs/source/make_doc_data.py > docs/build/data.json
+#
+#docs-rst: docs-build-data
+#	j2 docs/source/index.rst docs/build/data.json > docs/build/index.rst
+#
+#docs-html: docs-rst
+#	rst2html docs/build/index.rst docs/build/index.html
+
+docs-rst:
+	./docs/source/make_doc_data.py > docs/build/index.rst
+
+docs-html: docs-rst
+	rst2html docs/build/index.rst docs/build/index.html
