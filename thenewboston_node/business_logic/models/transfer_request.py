@@ -23,11 +23,18 @@ logger = logging.getLogger(__name__)
 @dataclass_json
 @dataclass
 class TransferRequest(SignableMixin):
+    """Coin transfer request signed by the sender"""
+
     verify_key_field_name = 'sender'
 
     sender: str
+    """Sender's account number"""
+
     message: TransferRequestMessage
+    """Transfer request payload"""
+
     message_signature: Optional[str] = None
+    """Sender's signature of the message"""
 
     @classmethod
     def from_transfer_request_message(cls: Type[T], message: TransferRequestMessage, signing_key: str) -> T:

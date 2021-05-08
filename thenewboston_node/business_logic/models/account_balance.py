@@ -15,8 +15,13 @@ logger = logging.getLogger(__name__)
 @dataclass_json
 @dataclass
 class AccountBalance:
+    """Account balance state"""
+
     value: int
+    """Amount balance value in coins"""
+
     lock: str
+    """Account balance lock"""
 
     @validates('account balance')
     def validate(self, validate_lock=True):

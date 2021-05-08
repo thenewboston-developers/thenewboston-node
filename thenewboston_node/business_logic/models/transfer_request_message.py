@@ -20,8 +20,13 @@ T = TypeVar('T', bound='TransferRequestMessage')
 @dataclass_json
 @dataclass
 class TransferRequestMessage(MessageMixin):
+    """Coin transfer request message"""
+
     balance_lock: str
+    """Current sender's balance lock"""
+
     txs: list[Transaction]
+    """List of `Transaction` objects"""
 
     @classmethod
     def from_transactions(cls: Type[T], blockchain, sender: str, txs: list[Transaction]) -> T:
