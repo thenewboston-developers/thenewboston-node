@@ -56,7 +56,13 @@ def calculate_updated_balances(get_balance_value: Callable[[str], Optional[int]]
 @dataclass_json
 @dataclass
 class BlockMessage(MessageMixin):
+    """
+    Contains requested changes in the network like transfer of coins, etc...
+    """
+
     transfer_request: TransferRequest
+    """Requested changes"""
+
     # We need timestamp, block_number and block_identifier to be signed and hashed therefore
     # they are include in BlockMessage, not in Block
     timestamp: datetime = field(  # naive datetime in UTC
@@ -66,9 +72,16 @@ class BlockMessage(MessageMixin):
             mm_field=fields.DateTime(format='iso')
         )
     )
+    """Block timestamp in UTC"""
+
     block_number: int
+    """Sequential block number"""
+
     block_identifier: str
+    """Unique block identifier"""
+
     updated_balances: dict[str, BlockAccountBalance]
+    """New account balance values like {"`account_number`": `BlockAccountBalance`, ...}"""
 
     def override_to_dict(self):  # this one turns into to_dict()
         dict_ = self.super_to_dict()

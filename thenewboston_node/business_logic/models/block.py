@@ -26,12 +26,29 @@ logger = logging.getLogger(__name__)
 @dataclass_json
 @dataclass
 class Block(SignableMixin, MessagpackCompactableMixin):
+    """
+    Blocks represent a description of change to the network.
+    These originate from signed requests and may include:
+
+     - a transfer of coins between accounts
+     - the registration of a username
+     - a new node being added to the network
+     - etc...
+    """
+
     verify_key_field_name = 'node_identifier'
 
     node_identifier: str
+    """Public key of a node signed the block"""
+
     message: BlockMessage
+    """Block payload"""
+
     message_hash: Optional[str] = None
+    """Hash value of message field"""
+
     message_signature: Optional[str] = None
+    """The signature of the node indicating the validity of the block"""
 
     @classmethod
     @timeit_method(level=logging.INFO, is_class_method=True)

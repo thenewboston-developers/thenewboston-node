@@ -38,6 +38,7 @@ pytest-xdist = "^2.2.1"
 pdbpp = "^0.10.2"
 colorlog = "^4.8.0"
 yappi = "^1.3.2"
+Jinja2 = "^2.11.3"
 
 [tool.poetry.scripts]
 generate-blockchain = "thenewboston_node.cli.generate_blockchain:entry"

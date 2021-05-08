@@ -21,10 +21,19 @@ def remove_key_if_optional(dict_, key, optional_values=(None,)):
 @dataclass_json
 @dataclass
 class Transaction:
+    """Coin transfer between accounts"""
+
     recipient: str
+    """Recipient's account number"""
+
     amount: int
+    """Coins being sent to the recipient"""
+
     fee: Optional[bool] = None  # None value won't be serialized
+    """True if transaction is fee"""
+
     memo: Optional[str] = None
+    """Optional memo"""
 
     def override_to_dict(self):  # this one turns into to_dict()
         dict_ = self.super_to_dict()

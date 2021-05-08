@@ -9,8 +9,13 @@ from thenewboston_node.business_logic.enums import NodeType
 @dataclass
 class Node:
     identifier: str
+    """Node's public key"""
+
     fee_amount: int
+    """Validation fee taking by the node"""
+
     type_: str
+    """Node type"""
 
 
 @dataclass_json

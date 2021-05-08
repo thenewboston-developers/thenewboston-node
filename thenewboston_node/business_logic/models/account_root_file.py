@@ -22,12 +22,19 @@ logger = logging.getLogger(__name__)
 @dataclass_json
 @dataclass
 class AccountRootFile(MessagpackCompactableMixin):
+    """Historical snapshot of all account balances at any point in time"""
+
     accounts: dict[str, AccountBalance]
+    """Dict like {"`account_number`": `AccountBalance`, ...}"""
+
     last_block_number: Optional[int] = None
+    """Block number at which snapshot was taken"""
 
     # TODO(dmu) MEDIUM: Do we really need last_block_identifier?
     last_block_identifier: Optional[str] = None
-    last_block_timestamp: Optional[datetime] = field(  # naive datetime in UTC
+    """Block identifier at which snapshot was taken"""
+
+    last_block_timestamp: Optional[datetime] = field(
         metadata=config(
             encoder=lambda x: None if x is None else x.isoformat(),
             decoder=lambda x: None if x is None else datetime.fromisoformat(x),
@@ -35,8 +42,10 @@ class AccountRootFile(MessagpackCompactableMixin):
         ),
         default=None,
     )
+    """Naive datetime in UTC"""
 
     next_block_identifier: Optional[str] = None
+    """Next block identifier"""
 
     def override_to_dict(self):  # this one turns into to_dict()
         dict_ = self.super_to_dict()
